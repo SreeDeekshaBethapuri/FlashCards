@@ -1,2 +1,2 @@
 # FlashCards
-This is going to be a website built on python and Django for websites! 
+This is going be a website built on Python and Django for flashcards!
