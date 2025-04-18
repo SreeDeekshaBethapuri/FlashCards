@@ -1,0 +1,36 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Add Flashcard{% endblock %}
+
+{% block content %}
+    <h2 class="mb-4 text-center">Add a Flashcard</h2>
+
+    <form method="post" class="mb-3">
+        {% csrf_token %}
+        <div class="mb-3">
+            {{ form.keyword.label_tag }}
+            {{ form.keyword }}
+        </div>
+        <div class="mb-3">
+            {{ form.definition.label_tag }}
+            {{ form.definition }}
+        </div>
+
+        {% if form.errors %}
+            <div class="alert alert-danger">
+                <h5>Something's wrong! 😅</h5>
+                <ul>
+                    {% for field in form %}
+                        {% for error in field.errors %}
+                            <li><strong>{{ field.label }}:</strong> {{ error }}</li>
+                        {% endfor %}
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+
+        <button type="submit" class="btn btn-primary">Add Flashcard</button>
+    </form>
+
+    <a href="{% url 'welcome' %}" class="btn btn-outline-secondary">← Back to Welcome</a>
+{% endblock %}

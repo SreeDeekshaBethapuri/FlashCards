@@ -1,0 +1,114 @@
+Flashcards cz WHY PAY FOR THEM
+Version 1 – Documentation
+Pilot Production Requirements Document
+
+Purpose
+This document serves as the official reference for Version 1 of the Flashcards web application. It captures what was built for the MVP, how it works, and where we’re headed next. Any future updates, features, or redesigns will stack on top of this base.
+
+Concept
+We want a free, joyful, minimal, open-source flashcards app. Users should be able to store knowledge (keywords and their definitions) and use interactive flashcards to revise and self-test. No signups. No fees. Just vibes and revision.
+
+Primary User Story (MVP)
+As a user who wants to study better,
+I want a cute, clear interface
+So that I can create flashcards and use them for revision.
+
+Core Features (v1)
+Page	Functionality
+Welcome Page	Friendly greeting, aesthetic gif, and navigation buttons
+Entry Page	Add a flashcard via a simple form (keyword + definition)
+Practice Page	View one random flashcard at a time, flip to reveal the answer, go to next
+All pages are linked via navigation buttons and share a consistent, Bootstrap-styled layout.
+
+Page-by-Page Breakdown
+1️⃣ Welcome Page
+Message: “I know it's annoying but we got this T_T”
+
+Includes a cute gif
+
+Two CTA buttons:
+
+Add New Flashcard
+
+Practice Flashcards
+
+2️⃣ Entry Page
+Django form with:
+
+Keyword (CharField)
+
+Definition (CharField)
+
+Features:
+
+CSRF protection
+
+Custom error messages (e.g., quirky or funny feedback)
+
+Max length: 100 characters per field
+
+Redirects to same page after successful submission
+
+3️⃣ Practice Page
+Randomly displays one flashcard at a time
+
+Click to reveal the definition
+
+“Next” shows a new, unshown flashcard until exhausted
+
+After all are shown:
+
+Displays a message like “You practiced everything!!”
+
+Validations & Test Scenarios
+ID	Description	Type	Expected Result
+TC01	Submitting empty keyword or value	Negative	Error shown, card not saved
+TC02	Submitting valid keyword and value	Positive	Card saved, success shown
+TC03	Over 100 characters in a field	Boundary	Error shown, card not saved
+TC04	Clicking flashcard reveals meaning	UI	Definition is revealed
+TC05	"Next" shows new unseen flashcard	Logic/UI	New flashcard appears or “done”
+
+
+🛠 Tech Stack
+Layer	Tooling
+Frontend	Django Templates, Bootstrap 5
+Backend	Django (Python 3.x)
+Database	SQLite
+Versioning	Git + GitHub
+Validation	Django Forms + Custom error messaging
+
+
+Current Limitations
+Cannot edit or delete flashcards yet
+No login or user-specific data
+Random card selection logic resets only on refresh
+No visual animations (yet)
+
+Future Plans (Backlog for v2+)
+Edit and delete flashcards
+Flashcard categories (e.g., Math, Bio, etc.)
+Basic user profiles or login (optional)
+Card tracking (accuracy, attempts, history)
+Mobile-first design polish
+Dark mode toggle
+Deck import/export (CSV/JSON)
+
+Directory Snapshot (Simplified)
+bash
+Copy code
+flashCards/
+├── core/
+│   ├── views.py
+│   ├── models.py
+│   ├── forms.py
+│   ├── urls.py
+│   └── templates/core/
+│       ├── welcome.html
+│       ├── add_flashcard.html
+│       └── practice.html
+├── flashCards/
+│   └── settings.py
+└── manage.py
+Summary
+This version gives you a fully functional flashcards app with add + practice flow, minimal styling, and great potential for enhancements. Think of it as your first working prototype — clean, simple, and expandable.
+

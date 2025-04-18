@@ -1,0 +1,17 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Welcome to Flashcards!{% endblock %}
+
+{% block content %}
+    <div class="text-center">
+        <h1>Welcome to the Flashcards Website ✨</h1>
+        <p class="lead">Ready to learn something new today?</p>
+
+        <img src="https://media.giphy.com/media/13FrpeVH09Zrb2/giphy.gif" alt="Study vibe" class="img-fluid mb-4" width="300"/>
+
+        <div class="d-grid gap-3 col-6 mx-auto">
+            <a href="{% url 'add_flashcard' %}" class="btn btn-success">➕ Add New Flashcard</a>
+            <a href="{% url 'practice_flashcard' %}" class="btn btn-primary">🧠 Practice Flashcards</a>
+        </div>
+    </div>
+{% endblock %}
