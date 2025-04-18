@@ -1,4 +1,4 @@
-# Flashcards — Study Made Simple
+# Flashcards 
 
 A minimalist, open-source flashcard web app to help you study smarter, not harder. Create custom flashcards and practice them interactively — for free, with no signups or clutter.
 
