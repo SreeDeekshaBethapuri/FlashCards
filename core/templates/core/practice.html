@@ -3,28 +3,148 @@
 {% block title %}Practice Flashcards{% endblock %}
 
 {% block content %}
-    <div class="text-center">
-        <a href="{% url 'welcome' %}" class="btn btn-outline-secondary mb-4">← Back to Welcome</a>
+<!-- Navigation Bar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-purple px-4 py-2 mb-4">
+    <a class="navbar-brand" href="{% url 'practice_flashcards' %}">Practice</a>
+    <div class="ms-auto">
+        <a class="nav-link d-inline text-white me-3" href="{% url 'welcome' %}">Welcome</a>
+        <a class="nav-link d-inline text-white" href="{% url 'add_flashcard' %}">Add</a>
+    </div>
+</nav>
 
-        {% if flashcard %}
-            <div class="card shadow mx-auto" style="max-width: 400px;" onclick="revealDefinition()">
-                <div class="card-body">
-                    <h4 class="card-title">{{ flashcard.keyword }}</h4>
-                    <p class="card-text text-muted mt-3 definition" id="definition" style="display: none;">
-                        {{ flashcard.definition }}
-                    </p>
-                </div>
+<style>
+    body {
+        background: radial-gradient(circle at var(--x, 50%) var(--y, 50%), #3a0053, #1a0029);
+        color: #e0e0e0;
+        min-height: 100vh;
+        transition: background 0.3s ease;
+    }
+
+    .card-container {
+        perspective: 1000px;
+        max-width: 500px;
+        margin: 80px auto 20px;
+    }
+
+    .card-flip {
+        width: 100%;
+        transition: transform 0.8s ease;
+        transform-style: preserve-3d;
+        position: relative;
+        cursor: pointer;
+    }
+
+    .card-flip.flipped {
+        transform: rotateY(180deg);
+    }
+
+    .card-face {
+        background-color: rgba(40, 10, 60, 0.9);
+        color: #f0f0f0;
+        border-radius: 18px;
+        padding: 2rem;
+        min-height: 300px;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+        position: absolute;
+        width: 100%;
+        backface-visibility: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.4rem;
+        text-align: center;
+    }
+
+    .card-face.back {
+        transform: rotateY(180deg);
+        background-color: rgba(50, 20, 70, 0.9);
+    }
+
+    .bg-purple {
+        background-color: rgba(58, 0, 83, 0.8);
+        backdrop-filter: blur(6px);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .navbar a.nav-link:hover,
+    .navbar a.navbar-brand:hover {
+        color: #ddddff;
+        text-shadow: 0 0 6px rgba(255, 255, 255, 0.3);
+        transition: 0.2s ease-in-out;
+    }
+
+    .btn-purple {
+        background-color: white;
+        color: #3a0053;
+        font-weight: bold;
+        padding: 0.6rem 1.4rem;
+        border-radius: 8px;
+        border: none;
+        transition: all 0.3s ease;
+    }
+
+    .btn-purple:hover {
+        background-color: #f2e6ff;
+        box-shadow: 0 0 10px rgba(255,255,255,0.4);
+        transform: scale(1.05);
+    }
+</style>
+
+{% if flashcard %}
+    <div class="card-container" onclick="toggleFlip()">
+        <div class="card-flip">
+            <div class="card-face front">
+                <strong id="keyword">{{ flashcard.keyword }}</strong>
             </div>
-            <p class="mt-3">Click the card to reveal the definition!</p>
-        {% else %}
-            <h4>No flashcards available yet T_T</h4>
-        {% endif %}
+            <div class="card-face back">
+                <span id="definition">{{ flashcard.definition }}</span>
+            </div>
+        </div>
     </div>
 
-    <script>
-        function revealDefinition(){
-            const def = document.getElementById('definition');
-            def.style.display = 'block';
-        }
-    </script>
+    <div class="text-center mt-4">
+        <button class="btn btn-purple" onclick="loadNextFlashcard()">Next</button>
+    </div>
+{% else %}
+    <div class="text-center">
+        <h4>No flashcards available yet T_T</h4>
+    </div>
+{% endif %}
+
+
+<script>
+    let shownFlashcards = [];
+
+    function toggleFlip() {
+        document.querySelector('.card-flip').classList.toggle('flipped');
+    }
+
+    function loadNextFlashcard() {
+        const csrftoken = '{{ csrf_token }}';
+        fetch("{% url 'get_new_flashcard' %}", {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrftoken
+            },
+            body: JSON.stringify({ shown_ids: shownFlashcards })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data && data.keyword) {
+                shownFlashcards.push(data.id);
+                document.querySelector('.card-flip').classList.remove('flipped');
+                document.getElementById('keyword').textContent = data.keyword;
+                document.getElementById('definition').textContent = data.definition;
+            } else {
+                alert("No more flashcards!");
+            }
+        });
+    }
+
+    document.addEventListener("mousemove", e => {
+        document.body.style.setProperty('--x', `${e.clientX}px`);
+        document.body.style.setProperty('--y', `${e.clientY}px`);
+    });
+</script>
 {% endblock %}

@@ -3,34 +3,127 @@
 {% block title %}Add Flashcard{% endblock %}
 
 {% block content %}
-    <h2 class="mb-4 text-center">Add a Flashcard</h2>
+<nav class="navbar navbar-expand-lg navbar-dark bg-purple px-4 py-2 mb-4">
+    <a class="navbar-brand" href="#">Add</a>
+    <div class="ms-auto">
+      <a class="nav-link d-inline text-white me-3" href="{% url 'welcome' %}">Welcome</a>
+      <a class="nav-link d-inline text-white" href="{% url 'practice_flashcard' %}">Practice</a>
+    </div>
+  </nav>
 
-    <form method="post" class="mb-3">
-        {% csrf_token %}
-        <div class="mb-3">
-            {{ form.keyword.label_tag }}
-            {{ form.keyword }}
-        </div>
-        <div class="mb-3">
-            {{ form.definition.label_tag }}
-            {{ form.definition }}
-        </div>
+<style>
+  body {
+    background: radial-gradient(circle at var(--x, 50%) var(--y, 50%), #3a0053, #1a0029);
+    color: #e0e0e0;
+    min-height: 100vh;
+    transition: background 0.3s ease;
+  }
 
-        {% if form.errors %}
-            <div class="alert alert-danger">
-                <h5>Something's wrong! 😅</h5>
-                <ul>
-                    {% for field in form %}
-                        {% for error in field.errors %}
-                            <li><strong>{{ field.label }}:</strong> {{ error }}</li>
-                        {% endfor %}
-                    {% endfor %}
-                </ul>
-            </div>
-        {% endif %}
+  .form-wrapper {
+    background-color: rgba(90, 30, 120, 0.6); /* lighter purple */
+    border-radius: 16px;
+    padding: 2rem;
+    max-width: 600px;
+    margin: 0 auto;
+    box-shadow: 0 0 25px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(8px);
+  }
 
-        <button type="submit" class="btn btn-primary">Add Flashcard</button>
-    </form>
+  h2 {
+    color: #ffffff;
+  }
 
-    <a href="{% url 'welcome' %}" class="btn btn-outline-secondary">← Back to Welcome</a>
+  label {
+    color: #dddddd;
+  }
+
+  input[type="text"],
+  textarea {
+    background-color: rgba(255, 255, 255, 0.07);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  input[type="text"]:focus,
+  textarea:focus {
+    outline: none;
+    border-color: #ffffff;
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+
+  .btn-custom {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    transition: all 0.3s ease;
+  }
+
+  .btn-custom:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 0 12px rgba(255, 255, 255, 0.4);
+    transform: scale(1.03);
+  }
+
+  .alert-danger {
+    background-color: rgba(255, 0, 0, 0.1);
+    color: #ffdddd;
+    border-color: rgba(255, 0, 0, 0.4);
+  }
+  .bg-purple {
+  background-color: rgba(58, 0, 83, 0.8); /* matches your background */
+  backdrop-filter: blur(6px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.navbar a.nav-link:hover,
+.navbar a.navbar-brand:hover {
+  color: #ddddff;
+  text-shadow: 0 0 6px rgba(255, 255, 255, 0.3);
+  transition: 0.2s ease-in-out;
+}
+
+  
+</style>
+
+<script>
+  // To create cursor-based radial light effect on background
+  document.addEventListener("mousemove", e => {
+    document.body.style.setProperty('--x', `${e.clientX}px`);
+    document.body.style.setProperty('--y', `${e.clientY}px`);
+  });
+</script>
+
+<div class="form-wrapper mt-5">
+  <h2 class="text-center mb-4">Add a Flashcard</h2>
+
+  <form method="post">
+    {% csrf_token %}
+    <div class="mb-3">
+      {{ form.keyword.label_tag }}
+      {{ form.keyword }}
+    </div>
+    <div class="mb-3">
+      {{ form.definition.label_tag }}
+      {{ form.definition }}
+    </div>
+
+    {% if form.errors %}
+      <div class="alert alert-danger">
+        <h5>Something's wrong! 😅</h5>
+        <ul>
+          {% for field in form %}
+            {% for error in field.errors %}
+              <li><strong>{{ field.label }}:</strong> {{ error }}</li>
+            {% endfor %}
+          {% endfor %}
+        </ul>
+      </div>
+    {% endif %}
+
+    <div class="d-grid gap-2">
+      <button type="submit" class="btn btn-custom">Add Flashcard</button>
+      <a href="{% url 'welcome' %}" class="btn btn-outline-light">← Back to Welcome</a>
+    </div>
+  </form>
+</div>
 {% endblock %}
